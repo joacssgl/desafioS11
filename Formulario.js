@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
       fetch(url, options)
         .then((response) => response.json())
         .then((data) => {
-          resultadoDiv.innerHTML = "Registro realizado con éxito";
+          resultadoDiv.innerHTML = JSON.stringify(data, null, 2);
         })
         .catch((error) => {
             resultadoDiv.innerHTML = "No se pudo realizar su registro";
