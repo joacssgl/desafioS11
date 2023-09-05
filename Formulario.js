@@ -1,43 +1,37 @@
-document.addEventListener("DOMContentLoaded", function() {
- 
-    let regBtn = document.getElementById("regBtn");
-    console.log(regBtn);
-    regBtn.addEventListener("click", function() {
-        let email = document.getElementById("email1").value;
-        let password = document.getElementById("password1").value;
-
-        let usuarios = JSON.parse(localStorage.getItem("usuarios")) || [];
-
-        let usuarioEncontrado = usuarios.find(user => user.email === email && user.password === password);
-
-        if (!usuarioEncontrado) {
-            showAlertError();
-            return;
-        }
-
-        localStorage.setItem("usuarioChange", usuarioEncontrado.email);
-        showAlertSuccess();
+document.addEventListener("DOMContentLoaded", function () {
+    const formulario = document.getElementById("formRegistro");
+    const resultadoDiv = document.getElementById("resultado");
+  
+    formulario.addEventListener("submit", function (event) {
+      event.preventDefault();
+  
+      const nombre = document.getElementById("nombre").value;
+      const apellido = document.getElementById("apellido").value;
+      const fechaNacimiento = document.getElementById("fechaNacimiento").value;
+  
+      const formData = {
+        nombre: nombre,
+        apellido: apellido,
+        fechaNacimiento: fechaNacimiento,
+      };
+  
+      const url = "https://jsonplaceholder.typicode.com/users";
+  
+      const options = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      };
+  
+      fetch(url, options)
+        .then((response) => response.json())
+        .then((data) => {
+          resultadoDiv.innerHTML = "Registro realizado con éxito";
+        })
+        .catch((error) => {
+            resultadoDiv.innerHTML = "No se pudo realizar su registro";
+          })
     });
-
-    let expirationDate = new Date();
-
-    function showAlertSuccess() {
-        document.getElementById("alert-success").classList.add("show");
-        localStorage.setItem("sesionIniciada", "true");
-        let recuerdameCheckbox = document.getElementById("recuerdame");
-        if (recuerdameCheckbox.checked) {
-            expirationDate.setDate(expirationDate.getDate() + 7);
-            const cookieValue = "recuerdame=true; expires=" + expirationDate.toUTCString() + "; path=/";
-            document.cookie = cookieValue;
-        } else {
-            document.cookie = "recuerdame=true; path=/";
-        }
-        setTimeout(function() {
-            window.location.href = "index.html";
-        }, 500);
-    }
-
-    function showAlertError() {
-        document.getElementById("alert-danger").classList.add("show");
-    }
-});
+  });  
